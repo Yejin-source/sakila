@@ -190,6 +190,7 @@
 
 %>
 
+<!-- view -->
 <!DOCTYPE html>
 <html>
 <head>
