@@ -27,7 +27,7 @@
 	int rowPerPage = 15; // 페이징 당 보여줄 행의 개수
 	int startRow = (currentPage - 1) * rowPerPage; 
 
-	int pageBlock = 10; // 5 페이지씩 표시
+	int pageBlock = 10; // 표시할 페이지 수
 	int startPage = ((currentPage - 1) / pageBlock) * pageBlock + 1;
 	int endPage = startPage + pageBlock - 1;
 	
@@ -95,9 +95,13 @@
 	rs.next();
 	
 	int totalCnt = rs.getInt("count(*)");
-	int lastPage = totalCnt / rowPerPage;
-	if(totalCnt % rowPerPage != 0) {
+	int lastPage = totalCnt / rowPerPage ;
+	 if(totalCnt % rowPerPage != 0) {
 		lastPage++;
+	} 
+	// 표시할 마지막 페이지 수 설정
+	if(endPage > lastPage) {
+		endPage = lastPage;
 	}
 	
 	
@@ -300,6 +304,7 @@
 	%>
 	
 	<a href="/sakila/d0325/rentalList.jsp?storeId=<%=storeId%>&searchWord=<%=searchWord%>&currentPage=<%=lastPage%>">[마지막]</a>
+	
 	
 	<form action="/sakila/d0325/rentalList.jsp">
 		<input type="hidden" name="storeId" value="<%=storeId%>">
