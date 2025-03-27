@@ -11,6 +11,7 @@
 		<li><a href="/sakila/d0325/rentalList.jsp">대여목록</a></li>
 		<li><a href="/sakila/d0326/filmList.jsp">영화목록</a></li>
 		<li><a href="/sakila/d0326/actorList.jsp">배우목록</a></li>
+		<li><a href="/sakila/d0327/inventoryList.jsp">반납목록</a></li>
 	</ol>
 </body>
 </html>
