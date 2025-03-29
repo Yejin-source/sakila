@@ -44,16 +44,13 @@
 	
 	// 전체 개수
 	String sql = "SELECT COUNT(*) cnt"
-				+ " FROM (SELECT i.inventory_id, f.title"
-				+ " FROM inventory i INNER JOIN film f"
-				+ " ON i.film_id = f.film_id) t1"
-				+ " LEFT OUTER JOIN"
-				+ " (SELECT i.inventory_id, f.rental_date,"
-				+ " CASE WHEN return_date IS NULL THEN '대여불가' ELSE '대여가능' END isRental"
-				+ " FROM rental WHERE (inventory_id, rental_date)"
-				+ " IN (SELECT inventory_id, MAX(rental_date)"
-				+ " FROM rental GROUP BY inventory_id)) t2"
-				+ " ON t1.inventory_id = t2.inventory_id";
+					+ " FROM (SELECT i.inventory_id, i.film_id, t.return_date"
+					+ ", case WHEN t.rental_date IS NULL then '대여가능'"
+					+ " WHEN t.return_date IS NULL THEN '대여불가' ELSE '대여가능' END isRental"
+					+ " FROM inventory i LEFT JOIN (SELECT inventory_id, rental_date, return_date FROM rental"
+					+ " WHERE (inventory_id, rental_date) IN (SELECT inventory_id, MAX(rental_date)"
+					+ " FROM rental GROUP BY inventory_id) ORDER BY inventory_id ASC) t ON i.inventory_id = t.inventory_id) t"
+					+ " INNER JOIN film f ON t.film_id = f.film_id";
 	stmt = conn.prepareStatement(sql);	
 	
 	// 검색어가 있을 때 개수
