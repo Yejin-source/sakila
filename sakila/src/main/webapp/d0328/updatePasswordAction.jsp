@@ -52,8 +52,8 @@
 	
 	if(row == 1) {
 		// 비밀번호 변경 성공
-		System.out.print("비밀번호 변경되었습니다.");
-		response.sendRedirect("/sakila/d0328/loginForm.jsp");
+		System.out.print("비밀번호가 변경되었습니다.");
+		response.sendRedirect("/sakila/d0328/logout.jsp");
 	} else {
 		// 비밀번호 변경 실패 | 현재 비밀번호를 틀린 경우
 		System.out.print("비밀번호를 정확하게 입력해 주세요.");
