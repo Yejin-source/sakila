@@ -44,18 +44,23 @@
 	
 	// 전체 개수
 	String sql = "SELECT COUNT(*) cnt"
-					+ " FROM (SELECT i.inventory_id, i.film_id, t.return_date"
-					+ ", case WHEN t.rental_date IS NULL then '대여가능'"
+					+ " FROM (SELECT i.inventory_id, i.film_id, t.return_date,"
+					+ " CASE WHEN t.rental_date IS NULL THEN '대여가능'"
 					+ " WHEN t.return_date IS NULL THEN '대여불가' ELSE '대여가능' END isRental"
 					+ " FROM inventory i LEFT JOIN (SELECT inventory_id, rental_date, return_date FROM rental"
 					+ " WHERE (inventory_id, rental_date) IN (SELECT inventory_id, MAX(rental_date)"
-					+ " FROM rental GROUP BY inventory_id) ORDER BY inventory_id ASC) t ON i.inventory_id = t.inventory_id) t"
+					+ " FROM rental GROUP BY inventory_id)) t ON i.inventory_id = t.inventory_id) t"
 					+ " INNER JOIN film f ON t.film_id = f.film_id";
 	stmt = conn.prepareStatement(sql);	
 	
+	/*
+		IN ->  조건을 만족하는지 확인
+		t는 다른 범위에서 별칭으로 사용하고 있기 때문에 중복 사용 가능
+	*/
+	
 	// 검색어가 있을 때 개수
 	if(!searchWord.equals("")) {
-		sql += " WHERE t1.title LIKE ?";
+		sql += " WHERE title LIKE ?";
 		stmt = conn.prepareStatement(sql);
 		stmt.setString(1, "%" + searchWord + "%");
 	}
@@ -80,9 +85,9 @@
 	PreparedStatement stmt2 = null;
 	ResultSet rs2 = null;
 	
-	// 전체 출력
-	String sql2 = "SELECT t1.inventory_id inventoryId, t1.title title, t2.isRental isRental"
-				+ " FROM (SELECT i.inventory_id, f.title"
+	// 검색 쿼리
+	String sql2 = "SELECT t1.inventory_id inventoryId, t1.title title, t1.store_id storeId, t2.isRental isRental"
+				+ " FROM (SELECT i.inventory_id, f.title, i.store_id"
 				+ " FROM inventory i INNER JOIN film f"
 				+ " ON i.film_id = f.film_id) t1"
 				+ " LEFT OUTER JOIN"
@@ -91,27 +96,17 @@
 				+ " FROM rental WHERE (inventory_id, rental_date)"
 				+ " IN (SELECT inventory_id, MAX(rental_date)"
 				+ " FROM rental GROUP BY inventory_id)) t2"
-				+ " ON t1.inventory_id = t2.inventory_id LIMIT ?, ?";
+				+ " ON t1.inventory_id = t2.inventory_id";
 	
-	stmt2 = conn.prepareStatement(sql2);
-	stmt2.setInt(1, startRow);
-	stmt2.setInt(2, rowPerPage);
-	
-	
-	// 검색어가 있을 때 출력
-	if(!searchWord.equals("")) {
-		sql2 = "SELECT t1.inventory_id inventoryId, t1.title title, t2.isRental isRental"
-				+ " FROM (SELECT i.inventory_id, f.title"
-				+ " FROM inventory i INNER JOIN film f"
-				+ " ON i.film_id = f.film_id) t1"
-				+ " LEFT OUTER JOIN"
-				+ " (SELECT inventory_id, rental_date,"
-				+ " CASE WHEN return_date IS NULL THEN '대여불가' ELSE '대여가능' END isRental"
-				+ " FROM rental WHERE (inventory_id, rental_date)"
-				+ " IN (SELECT inventory_id, MAX(rental_date)"
-				+ " FROM rental GROUP BY inventory_id)) t2"
-				+ " ON t1.inventory_id = t2.inventory_id WHERE t1.title LIKE ? LIMIT ?, ?"; 
-
+	// 검색어가 없을 때
+	if(searchWord.equals("")) {
+		sql2 += " LIMIT ?, ?";
+		stmt2 = conn.prepareStatement(sql2);
+		stmt2.setInt(1, startRow);
+		stmt2.setInt(2, rowPerPage);
+		
+	} else if(!searchWord.equals("")) { // 검색어가 있을 때
+		sql2 += " WHERE t1.title LIKE ? LIMIT ?, ?";
 		stmt2 = conn.prepareStatement(sql2);
 		stmt2.setString(1, "%" + searchWord + "%");
 		stmt2.setInt(2, startRow);
@@ -127,6 +122,7 @@
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("inventoryId", rs2.getInt("inventoryId"));
 		map.put("title", rs2.getString("title"));
+		map.put("storeId", rs2.getInt("storeId"));
 		map.put("isRental", rs2.getString("isRental"));
 		list.add(map);
 	}
@@ -153,6 +149,7 @@
 		<tr>
 			<th>Id</th>
 			<th>Title</th>
+			<th>Store</th>			
 			<th>Return Date</th>
 			<th>Rental Link</th>
 		</tr>
@@ -163,7 +160,18 @@
 				<tr>
 					<td><%=map.get("inventoryId")%></td>
 					<td><%=map.get("title")%></td>
-					<td><%=map.get("isRental")%></td>	
+					<td><%=map.get("storeId")%>지점</td>
+					<td><%=map.get("isRental")%></td>
+					<td>
+						<%
+							String rentalLink = String.valueOf(map.get("isRental"));
+							if(rentalLink.equals("대여가능")) {
+						%>
+								<a href="">대여하기</a>
+						<%		
+							}
+						%>
+					</td>	
 				</tr>
 		<% 
 			}
