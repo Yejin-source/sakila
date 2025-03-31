@@ -27,6 +27,8 @@
 		<li><a href="/sakila/d0325/rentalList.jsp">대여목록</a></li><!-- 3/25 -->
 		<li><a href="/sakila/d0326/filmList.jsp">영화목록</a></li><!-- 3/26 -->
 		<li><a href="/sakila/d0326/actorList.jsp">배우목록</a></li><!-- 3/26 -->
+		<!-- 3/27 인벤토리 리스트 + 영화제목 + 대여중 or 대여가능 -->
+		<li><a href="/sakila/d0327/inventoryList.jsp">인벤토리목록</a></li>
 	</ol>
 </body>
 </html>

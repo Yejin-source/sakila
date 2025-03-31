@@ -46,7 +46,7 @@
 	String sql = "SELECT COUNT(*) cnt"
 					+ " FROM (SELECT i.inventory_id, i.film_id, t.return_date,"
 					+ " CASE WHEN t.rental_date IS NULL THEN '대여가능'"
-					+ " WHEN t.return_date IS NULL THEN '대여불가' ELSE '대여가능' END isRental"
+					+ " WHEN t.return_date IS NULL THEN '대여중' ELSE '대여가능' END isRental"
 					+ " FROM inventory i LEFT JOIN (SELECT inventory_id, rental_date, return_date FROM rental"
 					+ " WHERE (inventory_id, rental_date) IN (SELECT inventory_id, MAX(rental_date)"
 					+ " FROM rental GROUP BY inventory_id)) t ON i.inventory_id = t.inventory_id) t"
@@ -92,7 +92,7 @@
 				+ " ON i.film_id = f.film_id) t1"
 				+ " LEFT OUTER JOIN"
 				+ " (SELECT inventory_id, rental_date,"
-				+ " CASE WHEN return_date IS NULL THEN '대여불가' ELSE '대여가능' END isRental"
+				+ " CASE WHEN return_date IS NULL THEN '대여중' ELSE '대여가능' END isRental"
 				+ " FROM rental WHERE (inventory_id, rental_date)"
 				+ " IN (SELECT inventory_id, MAX(rental_date)"
 				+ " FROM rental GROUP BY inventory_id)) t2"
@@ -167,7 +167,11 @@
 							String rentalLink = String.valueOf(map.get("isRental"));
 							if(rentalLink.equals("대여가능")) {
 						%>
-								<a href="">대여하기</a>
+								<a href="/sakila/d0331/insertRentalForm.jsp?inventoryId=1">대여하기</a>
+						<%		
+							} else {
+						%>		
+								<a href="">반납하기</a>
 						<%		
 							}
 						%>
