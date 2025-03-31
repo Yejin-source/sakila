@@ -20,7 +20,15 @@
 </head>
 <body>
 	<h1>Staff Login</h1>
-	<form action="/sakila/d0328/loginAction.jsp">
+	<form action="/sakila/d0328/loginAction.jsp" method="post"> <!-- 매개값이 노출되지 않음 -->
+	<!-- 
+		a태그와 동일한 방식: loginAction.jsp?number= & password= 
+		매개값이 노출됨, 브라우저 주소창에 문자열 형태로 넘어가니까 길이가 제한되어 있음
+		
+		데이터값을 매개값으로 해서 다른 페이지로 전송하는 방법
+		1) a태그: get (무조건 값이 노출됨)
+		2) form 태그의 method 속성: get, post
+	-->
 		<table border="1">
 			<tr>
 				<th>staffId</th>
