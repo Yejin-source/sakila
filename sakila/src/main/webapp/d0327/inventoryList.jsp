@@ -179,11 +179,11 @@
 							if(rentalLink.equals("대여가능")) {
 						%>		
 																	<!-- inventoryId 값이 insertRentalForm.jsp으로 넘어가게 수정 -->
-								<a href="/sakila/d0331/insertRentalForm.jsp?inventoryId=<%=map.get("inventoryId")%>">대여하기</a>
+								<a href='/sakila/d0331/insertRentalForm.jsp?inventoryId=<%=map.get("inventoryId")%>'>대여하기</a>
 						<%		
 							} else {
 						%>		
-								<a href="">반납하기</a>
+								<a href='/sakila/d0401/returnForm.jsp?inventoryId=<%=map.get("inventoryId")%>'>반납하기</a>
 						<%		
 							}
 						%>

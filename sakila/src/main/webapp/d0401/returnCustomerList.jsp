@@ -14,7 +14,7 @@
 	System.out.println("드라이버 로딩 성공!");
 	
 	conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/sakila", "root", "java1234");
-	System.out.println("searchCustomerList conn: " + conn);
+	System.out.println("returnCustomerList conn: " + conn);
 	
 	PreparedStatement stmt = null;	
 	ResultSet rs = null;
@@ -23,7 +23,7 @@
 					+ " FROM customer WHERE CONCAT(first_name, last_name) LIKE ?";
 	stmt = conn.prepareStatement(sql);	
 	stmt.setString(1, "%"+ searchName + "%");
-	System.out.println("searchCustomerList stmt: " + stmt);
+	System.out.println("returnCustomerList stmt: " + stmt);
 	rs = stmt.executeQuery();
 
 %>
@@ -64,7 +64,7 @@
 						<%		
 							} else {
 						%>
-								<a href='/sakila/d0331/insertRentalForm.jsp?customerId=<%=rs.getInt("customerId")%>&inventoryId=<%=inventoryId%>'>
+								<a href='/sakila/d0401/returnForm.jsp?customerId=<%=rs.getInt("customerId")%>&inventoryId=<%=inventoryId%>'>
 									선택
 								</a>
 						<%		
