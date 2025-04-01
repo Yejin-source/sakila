@@ -35,6 +35,7 @@
 <title></title>
 </head>
 <body>
+	<h1>Search Customer List</h1>
 	<table border="1">
 		<tr>
 			<td>customerId</td>
@@ -57,7 +58,7 @@
 						<%
 							if(rs.getInt("active") == 0) {
 						%>
-								<a href="/sakila/d0331/updateCustomerActive.jsp">
+								<a href='/sakila/d0331/updateCustomerActive.jsp?customerId=<%=rs.getInt("customerId")%>&active=<%=rs.getInt("active")%>'>
 									휴면상태 해지하기 <!-- customer.active 0을 1로 변경 -->
 								</a>
 						<%		

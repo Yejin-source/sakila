@@ -35,7 +35,13 @@
 	stmt.setInt(1, inventoryId);
 	stmt.setInt(2, customerId);
 	stmt.setInt(3, staffId);
-	stmt.executeUpdate();
+	int row = stmt.executeUpdate();
+	
+	if(row == 1) {
+		System.out.println("추가 완료");
+	} else {
+		System.out.println("추가 실패");
+	}
 	
 	response.sendRedirect("/sakila/d0325/rentalList.jsp");
 %>

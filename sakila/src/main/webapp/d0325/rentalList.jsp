@@ -144,13 +144,13 @@
 	if(searchWord.equals("")) {
 		
 		if(storeId == 0) { // Store 전체로 선택
-			sql2 += " ORDER BY returnDate DESC LIMIT ?, ?";
+			sql2 += " ORDER BY rental_id DESC LIMIT ?, ?";
 			stmt2 = conn.prepareStatement(sql2);
 			stmt2.setInt(1, startRow);
 			stmt2.setInt(2, rowPerPage);
 			
 		} else { // 1지점 or 2지점으로 선택
-			sql2 += " WHERE c.store_id = ? ORDER BY returnDate DESC LIMIT ?, ?";
+			sql2 += " WHERE c.store_id = ? ORDER BY rental_id DESC LIMIT ?, ?";
 			stmt2 = conn.prepareStatement(sql2);
 			stmt2.setInt(1, storeId);
 			stmt2.setInt(2, startRow);
@@ -251,8 +251,8 @@
 		%>
 	
 	</table>
-	
-	<a href="/sakila/d0325/rentalList.jsp?currentPage=1">[처음]</a>
+												  <!-- 검색 후 [처음] 누르면 검색이 초기화되는 부분 수정 -->
+	<a href="/sakila/d0325/rentalList.jsp?storeId=<%=storeId%>&searchWord=<%=searchWord%>&currentPage=1">[처음]</a>
 	
 	<%
 		if(startPage > 1) {

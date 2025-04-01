@@ -25,6 +25,17 @@
 	}
 	System.out.println("searchWord: " + searchWord);
 	
+	
+	// 로그인 확인 추가
+	Integer staffId = (Integer)(session.getAttribute("loginStaff"));
+	// 세션에서 loginStaff 키에 저장된 값을 가져옴 
+	// session.getAttribute("loginStaff") 반환값은 Object 타입 -> Integer로 반환
+
+	if(staffId == null) { // 로그아웃 상태라면
+		response.sendRedirect("/sakila/d0328/loginForm.jsp");
+		return;
+	}
+	
 %>
 
 
@@ -44,7 +55,7 @@
 	
 	// 전체 개수
 	String sql = "SELECT COUNT(*) cnt"
-					+ " FROM (SELECT i.inventory_id, i.film_id, t.return_date,"
+					+ " FROM (SELECT i.inventory_id, i.film_id, i.store_id, t.return_date,"
 					+ " CASE WHEN t.rental_date IS NULL THEN '대여가능'"
 					+ " WHEN t.return_date IS NULL THEN '대여중' ELSE '대여가능' END isRental"
 					+ " FROM inventory i LEFT JOIN (SELECT inventory_id, rental_date, return_date FROM rental"
@@ -166,8 +177,9 @@
 						<%
 							String rentalLink = String.valueOf(map.get("isRental"));
 							if(rentalLink.equals("대여가능")) {
-						%>
-								<a href="/sakila/d0331/insertRentalForm.jsp?inventoryId=1">대여하기</a>
+						%>		
+																	<!-- inventoryId 값이 insertRentalForm.jsp으로 넘어가게 수정 -->
+								<a href="/sakila/d0331/insertRentalForm.jsp?inventoryId=<%=map.get("inventoryId")%>">대여하기</a>
 						<%		
 							} else {
 						%>		
